@@ -20,8 +20,7 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
-        files: ['bower.json'],
-        tasks: ['wiredep']
+        files: ['bower.json']
       },
       styles: {
         files: ['<%= config.app %>/styles/**/*.scss'],
@@ -152,95 +151,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-
-    // Automatically inject Bower components into the HTML file
-    wiredep: {
-      app: {
-        ignorePath: /^\/|\.\.\//,
-        src: ['<%= config.app %>/index.html']
-      }
-    },
-
-    // Renames files for browser caching purposes
-    rev: {
-      dist: {
-        files: {
-          src: [
-            '<%= config.dist %>/scripts/{,*/}*.js',
-            '<%= config.dist %>/styles/{,*/}*.css',
-            '<%= config.dist %>/images/{,*/}*.*',
-            '<%= config.dist %>/styles/fonts/{,*/}*.*',
-            '<%= config.dist %>/*.{ico,png}'
-          ]
-        }
-      }
-    },
-
-    // Reads HTML for usemin blocks to enable smart builds that automatically
-    // concat, minify and revision files. Creates configurations in memory so
-    // additional tasks can operate on them
-    useminPrepare: {
-      options: {
-        dest: '<%= config.dist %>'
-      },
-      html: '<%= config.app %>/index.html'
-    },
-
-    // Performs rewrites based on rev and the useminPrepare configuration
-    usemin: {
-      options: {
-        assetsDirs: [
-          '<%= config.dist %>',
-          '<%= config.dist %>/images',
-          '<%= config.dist %>/styles'
-        ]
-      },
-      html: ['<%= config.dist %>/{,*/}*.html'],
-      css: ['<%= config.dist %>/styles/{,*/}*.css']
-    },
-
-    // The following *-min tasks produce minified files in the dist folder
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>/images',
-          src: '{,*/}*.{gif,jpeg,jpg,png}',
-          dest: '<%= config.dist %>/images'
-        }]
-      }
-    },
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>/images',
-          src: '{,*/}*.svg',
-          dest: '<%= config.dist %>/images'
-        }]
-      }
-    },
-    htmlmin: {
-      dist: {
-        options: {
-          collapseBooleanAttributes: true,
-          collapseWhitespace: true,
-          conservativeCollapse: true,
-          removeAttributeQuotes: true,
-          removeCommentsFromCDATA: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= config.dist %>',
-          src: '{,*/}*.html',
-          dest: '<%= config.dist %>'
-        }]
-      }
-    },
     
     // Compiles javascript files in to a single library
     concat: {
@@ -250,7 +160,32 @@ module.exports = function (grunt) {
         options: {
           sourceMap: true
         }
-      },
+      }
+    },
+    
+    // Compiles Bower scripts to a single library
+    bower_concat: {
+      all: {
+        dest: '<%= config.app %>/build/lib.js',
+        mainFiles: {
+          'jquery-jsonp': ['src/jquery.jsonp.js']
+        },
+        dependencies: {
+          'jquery-jsonp': 'jquery'
+        }
+      }
+    },
+    
+    uglify: {
+       bower: {
+        options: {
+          mangle: true,
+          compress: {}
+        },
+        files: {
+          '<%= config.app %>/build/lib.js': '<%= config.app %>/build/lib.js'
+        }
+      }
     },
     
     // Compiles sass files in to single css
@@ -320,7 +255,6 @@ module.exports = function (grunt) {
     }
     grunt.task.run([
       'clean:server',
-      'wiredep',
       'concurrent:server',
       'sass',
       'autoprefixer:dev',
@@ -344,21 +278,10 @@ module.exports = function (grunt) {
       'mocha'
     ]);
   });
-
-  grunt.registerTask('build', [
-    'clean:dist',
-    'wiredep',
-    'useminPrepare',
-    'concurrent:dist',
-    'sass',
-    'autoprefixer',
-    'concat:js',
-    'cssmin',
-    'uglify',
-    'copy:dist',
-    'rev',
-    'usemin',
-    'htmlmin'
+  
+  grunt.registerTask('bower', [
+    'bower_concat',
+    'uglify:bower'
   ]);
 
   grunt.registerTask('default', [
