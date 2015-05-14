@@ -2,7 +2,9 @@
   "name": "kpiscreens",
   "private": true,
   "dependencies": {
-    "jquery": "~1.11.1",
-    "jquery-jsonp": "~2.4.0"
+    "jquery": "~2.1.4"
+  },
+  "resolutions": {
+    "jquery": "~2.1.4"
   }
 }
