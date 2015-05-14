@@ -1,5 +1,8 @@
 {
   "name": "kpiscreens",
+  "version": "0.0.1",
+  "description": "Front end for accessing the KPI API.",
+  "author": "Scott Freeman",
   "devDependencies": {
     "apache-server-configs": "^2.7.1",
     "grunt": "^0.4.5",

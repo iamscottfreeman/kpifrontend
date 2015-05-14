@@ -9,8 +9,6 @@ var API = (function() {
     console.log('connecting to ' + node + '...');
     return $.ajax({
       url: node,
-      jsonp: 'callback',
-      dataType: 'jsonp',
       method: 'GET'
     });
   };
