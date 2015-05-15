@@ -1,0 +1,11 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+
+$black: #000;
+$white: #fff;
+
+body {
+  background: $black;
+  color: $white;
+  font-family: 'Lato', arial, helv, sans-serif;
+  font-size: 16px;
+}

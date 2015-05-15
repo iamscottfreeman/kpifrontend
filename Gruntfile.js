@@ -24,7 +24,7 @@ module.exports = function (grunt) {
       },
       styles: {
         files: ['<%= config.app %>/styles/**/*.scss'],
-        tasks: ['newer:copy:styles', 'autoprefixer', 'sass'],
+        tasks: ['autoprefixer', 'sass'],
         options: {
           nospawn: true
         }
@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         },
         files: [
           '<%= config.app %>/{,*/}*.html',
-          '.tmp/styles/{,*/}*.css',
+          '<%= config.app %>/build/{,*/}*',
           '<%= config.app %>/images/{,*/}*'
         ]
       }
@@ -150,7 +150,7 @@ module.exports = function (grunt) {
         }]
       }
     },
-    
+
     // Compiles javascript files in to a single library
     concat: {
       js: {
@@ -161,7 +161,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    
+
     // Compiles Bower scripts to a single library
     bower_concat: {
       all: {
@@ -174,7 +174,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    
+
     uglify: {
        bower: {
         options: {
@@ -186,7 +186,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    
+
     // Compiles sass files in to single css
     sass: {
       development: {
@@ -267,8 +267,7 @@ module.exports = function (grunt) {
     if (target !== 'watch') {
       grunt.task.run([
         'clean:server',
-        'concurrent:test',
-        'autoprefixer'
+        'concurrent:test'
       ]);
     }
 
@@ -277,7 +276,7 @@ module.exports = function (grunt) {
       'mocha'
     ]);
   });
-  
+
   grunt.registerTask('bower', [
     'bower_concat',
     'uglify:bower'
